@@ -1,19 +1,13 @@
 import * as mongo from '../mongoOperations.js';
 import { ObjectId } from 'mongodb';
 
-export const getTags = async (req) => {
-    let filter = {"_id": new ObjectId(req.body.siteId)};
-
-    let projection = {
-        tags: 1
-    }
-    
+export const getBalances = async (req) => {    
     let siteData = await mongo.find(filter, projection, 1, undefined, "sites");
 
     return (siteData.length > 0) ? {"status": "ok", "data": siteData[0].tags} : {"status": "error", "errorCode": "404"};
 };
 
-export const createTag = async (req) => {
+export const credit = async (req) => {
     let filter = {"_id": new ObjectId(req.body.siteId)};
 
     let id = new ObjectId();
@@ -35,7 +29,7 @@ export const createTag = async (req) => {
     return (result) ? {"status": "ok", "data": id} : {"status": "error", "errorCode": "404"};
 };
 
-export const updateTag = async (req) => {
+export const debit = async (req) => {
     if (req.body.id != undefined) {
         let filter = {"_id": ObjectId(req.body.siteId), "tags._id": ObjectId(req.body.id)};
 
@@ -59,7 +53,7 @@ export const updateTag = async (req) => {
     }
 }
 
-export const deleteTag = async (req) => {
+export const transfer = async (req) => {
     let filter = {"_id": ObjectId(req.body.siteId), "tags._id": ObjectId(req.body.id)};
 
     let values = {
