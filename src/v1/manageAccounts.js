@@ -6,7 +6,7 @@ export const createAccount = async (req) => {
 
     let values = {
         "_id": id,
-        "owner": req.query.owner,
+        "owner": req.body.owner,
         "usd": 0,
         "ars": 0,
         "active": true,
@@ -18,7 +18,7 @@ export const createAccount = async (req) => {
 };
 
 export const deleteAccount = async (req) => {
-    let filter = {"_id": ObjectId(req.query.id), "active": true};
+    let filter = {"_id": ObjectId(req.body.id), "active": true};
 
     let values = {
         "$set": {
@@ -28,5 +28,5 @@ export const deleteAccount = async (req) => {
 
     let result = await mongo.update(filter, values, "Banking");
     
-    return (result) ? {"status": "ok", "data": req.query.id} : {"status": "error", "errorCode": 404};
+    return (result) ? {"status": "ok", "data": req.body.id} : {"status": "error", "errorCode": 404};
 };
