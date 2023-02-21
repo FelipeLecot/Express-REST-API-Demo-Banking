@@ -1,0 +1,29 @@
+{
+  "name": "redgecko",
+  "version": "1.0.0",
+  "description": "",
+  "author": "Do2",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon -e css,js,ejs,cjs,ts,json,mjs src/server.js",
+    "start": "node src/server.js"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "src/static/**/*"
+    ]
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.2"
+  },
+  "dependencies": {
+    "@ampproject/toolbox-optimizer": "^2.9.0",
+    "busboy": "^1.6.0",
+    "compression": "^1.7.4",
+    "connect-busboy": "^1.0.0",
+    "cors": "^2.8.5",
+    "ejs": "^3.0.1",
+    "express": "^4.17.1",
+    "mongodb": "^4.9.1"
+  }
+}
