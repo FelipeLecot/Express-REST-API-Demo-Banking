@@ -8,49 +8,49 @@ export const getBalances = async (req) => {
 };
 
 export const creditBalance = async (req) => {
-    let filter = {"_id": new ObjectId(req.query.id)};
+    let filter = {"_id": new ObjectId(req.body.id)};
 
     let values = {
-        "$inc": {[req.query.account]: parseInt(req.query.quantity)}
+        "$inc": {[req.body.account]: parseInt(req.body.quantity)}
     }
 
     console.log(values)
 
     let result = await mongo.update(filter, values, "Banking");
 
-    return (result) ? {"status": "ok", "data": req.query.id} : {"status": "error", "errorCode": 404};
+    return (result) ? {"status": "ok", "data": req.body.id} : {"status": "error", "errorCode": 404};
 };
 
 export const debitBalance = async (req) => {
-    let filter = {"_id": new ObjectId(req.query.id)};
+    let filter = {"_id": new ObjectId(req.body.id)};
 
     let values = {
-        "$inc": {[req.query.account]: parseInt(-1 * eq.query.quantity)}
+        "$inc": {[req.body.account]: parseInt(-1 * eq.query.quantity)}
     }
 
     console.log(values)
 
     let result = await mongo.update(filter, values, "Banking");
 
-    return (result) ? {"status": "ok", "data": req.query.id} : {"status": "error", "errorCode": 404};
+    return (result) ? {"status": "ok", "data": req.body.id} : {"status": "error", "errorCode": 404};
 };
 
 export const transferBalance = async (req) => {
-    let filterFrom = {"_id": new ObjectId(req.query.from)};
+    let filterFrom = {"_id": new ObjectId(req.body.from)};
     
     let valuesFrom = {
-        "$inc": {[req.query.account]: parseInt(-1 * eq.query.quantity)}
+        "$inc": {[req.body.account]: parseInt(-1 * eq.query.quantity)}
     }
     
     let resultFrom = await mongo.update(filterFrom, valuesFrom, "Banking");
     
-    let filterTo = {"_id": new ObjectId(req.query.to)};
+    let filterTo = {"_id": new ObjectId(req.body.to)};
 
     let valuesTo = {
-        "$inc": {[req.query.account]: parseInt(req.query.quantity)}
+        "$inc": {[req.body.account]: parseInt(req.body.quantity)}
     }
     
     let resultTo = await mongo.update(filterTo, valuesTo, "Banking");
 
-    return (resultTo && resultFrom) ? {"status": "ok", "data": req.query.id} : {"status": "error", "errorCode": 404};
+    return (resultTo && resultFrom) ? {"status": "ok", "data": req.body.id} : {"status": "error", "errorCode": 404};
 };
