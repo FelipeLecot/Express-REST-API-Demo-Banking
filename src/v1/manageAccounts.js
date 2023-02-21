@@ -2,6 +2,10 @@ import * as mongo from '../mongoOperations.js';
 import { ObjectId } from 'mongodb';
 
 export const createAccount = async (req) => {
+    if (req.body.owner != null) {
+        return {"status": "error", "errorCode": 400};
+    }
+
     let id = new ObjectId();
 
     let values = {
@@ -13,7 +17,7 @@ export const createAccount = async (req) => {
     }
 
     let result = await mongo.insert(values, "Banking");
-
+    
     return (result) ? {"status": "ok", "data": id} : {"status": "error", "errorCode": 404};
 };
 
