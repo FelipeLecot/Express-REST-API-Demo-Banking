@@ -8,6 +8,10 @@ export const getBalances = async (req) => {
 };
 
 export const creditBalance = async (req) => {
+    if (req.body.id != null && req.body.account != null && req.body.quantity != null) {
+        return {"status": "error", "errorCode": 400};
+    }
+
     let filter = {"_id": new ObjectId(req.body.id)};
 
     let values = {
@@ -22,13 +26,15 @@ export const creditBalance = async (req) => {
 };
 
 export const debitBalance = async (req) => {
+    if (req.body.id != null && req.body.account != null && req.body.quantity != null) {
+        return {"status": "error", "errorCode": 400};
+    }
+    
     let filter = {"_id": new ObjectId(req.body.id)};
 
     let values = {
-        "$inc": {[req.body.account]: parseInt(-1 * eq.query.quantity)}
+        "$inc": {[req.body.account]: parseInt(-1 * req.body.quantity)}
     }
-
-    console.log(values)
 
     let result = await mongo.update(filter, values, "Banking");
 
@@ -36,6 +42,10 @@ export const debitBalance = async (req) => {
 };
 
 export const transferBalance = async (req) => {
+    if (req.body.from != null && req.body.to != null && req.body.quantity != null && req.body.account != null) {
+        return {"status": "error", "errorCode": 400};
+    }
+        
     let filterFrom = {"_id": new ObjectId(req.body.from)};
     
     let valuesFrom = {
@@ -52,5 +62,5 @@ export const transferBalance = async (req) => {
     
     let resultTo = await mongo.update(filterTo, valuesTo, "Banking");
 
-    return (resultTo && resultFrom) ? {"status": "ok", "data": req.body.id} : {"status": "error", "errorCode": 404};
+    return (resultTo && resultFrom) ? {"status": "ok"} : {"status": "error", "errorCode": 404};
 };
