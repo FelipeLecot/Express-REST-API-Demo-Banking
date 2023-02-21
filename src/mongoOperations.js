@@ -1,7 +1,7 @@
 import mongodb from 'mongodb';
 const { MongoClient, ObjectId } = mongodb;
 
-const client = new MongoClient("mongodb+srv://ASOKij389hUBNA928:aPUwJSCQCi60pBBevRGk87n4p3SmHLK8@interview.yfkxro1.mongodb.net/?retryWrites=true&w=majority");
+const client = new MongoClient("mongodb+srv://ASOKij389hUBNA928:aPUwJSCQCi60pBBevRGk87n4p3SmHLK8@interview.ypu62do.mongodb.net/?retryWrites=true&w=majority");
 
 export const aggregate = async (stages = [], limit = undefined, sort = undefined, collection) => {
     try {
@@ -19,7 +19,7 @@ export const aggregate = async (stages = [], limit = undefined, sort = undefined
             allOps.push({'$sort': sort});
         }
 
-        let db = client.db("redgecko");
+        let db = client.db("Interview");
         let result = db.collection(collection);
         
         return result
@@ -37,7 +37,7 @@ export const aggregate = async (stages = [], limit = undefined, sort = undefined
 export const find = async (filter = {}, projection = {}, limit = 0, sort = {}, collection) => {
     await client.connect();
 
-    let db = client.db("redgecko");
+    let db = client.db("Interview");
     let result = db.collection(collection);
     try {
         return result
@@ -55,7 +55,7 @@ export const find = async (filter = {}, projection = {}, limit = 0, sort = {}, c
 export const insert = async (data, collection) => {
     await client.connect();
 
-    let db = client.db("redgecko");
+    let db = client.db("Interview");
     let result = db.collection(collection);
     try {
         result.insertOne(data);
@@ -70,10 +70,12 @@ export const insert = async (data, collection) => {
 export const update = async (filter, update, collection) => {
     await client.connect();
 
-    let db = client.db("redgecko");
+    let db = client.db("Interview");
     let result = db.collection(collection);
     try {
-        result.updateMany(filter, update);
+        let resolution = await result.updateMany(filter, update);
+
+        console.log(resolution)
         return true;
     }
     catch (e) {
