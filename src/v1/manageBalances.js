@@ -2,89 +2,55 @@ import * as mongo from '../mongoOperations.js';
 import { ObjectId } from 'mongodb';
 
 export const getBalances = async (req) => {    
-    let siteData = await mongo.find(filter, projection, 1, undefined, "sites");
+    let balances = await mongo.find(undefined, undefined, undefined, undefined, "Banking");
 
-    return (siteData.length > 0) ? {"status": "ok", "data": siteData[0].tags} : {"status": "error", "errorCode": "404"};
+    return (balances.length > 0) ? {"status": "ok", "data": balances} : {"status": "error", "errorCode": 404};
 };
 
-export const credit = async (req) => {
-    let filter = {"_id": new ObjectId(req.body.siteId)};
-
-    let id = new ObjectId();
+export const creditBalance = async (req) => {
+    let filter = {"_id": new ObjectId(req.query.id)};
 
     let values = {
-        $push: {
-            tags: {
-                "name": "",
-                "description": "",
-                "slug": "",
-                "approved": false,
-                "_id": id
-            }
-        }
+        "$inc": {[req.query.account]: parseInt(req.query.quantity)}
     }
 
-    let result = await mongo.update(filter, values, "sites");
+    console.log(values)
 
-    return (result) ? {"status": "ok", "data": id} : {"status": "error", "errorCode": "404"};
+    let result = await mongo.update(filter, values, "Banking");
+
+    return (result) ? {"status": "ok", "data": req.query.id} : {"status": "error", "errorCode": 404};
 };
 
-export const debit = async (req) => {
-    if (req.body.id != undefined) {
-        let filter = {"_id": ObjectId(req.body.siteId), "tags._id": ObjectId(req.body.id)};
-
-        let changedFields = {};
-    
-        req.body.slug != undefined ? changedFields["tags.$.slug"] = req.body.slug : null; 
-        req.body.name != undefined ? changedFields["tags.$.name"] = req.body.name : null; 
-        req.body.description != undefined ? changedFields["tags.$.description"] = req.body.description : null; 
-        req.body.approved != undefined ? changedFields["tags.$.approved"] = req.body.approved == "true" : null;
-    
-        let values = {
-            $set: changedFields
-        }
-
-        let result = await mongo.update(filter, values, "sites");
-    
-        return (result) ? {"status": "ok", "data": req.body.id} : {"status": "error", "errorCode": "404"};
-    }
-    else {
-        return {"status": "error", "errorCode": "400"};
-    }
-}
-
-export const transfer = async (req) => {
-    let filter = {"_id": ObjectId(req.body.siteId), "tags._id": ObjectId(req.body.id)};
+export const debitBalance = async (req) => {
+    let filter = {"_id": new ObjectId(req.query.id)};
 
     let values = {
-        $pull: {
-            "tags": {
-                "_id": ObjectId(req.body.id)
-            }
-        }
+        "$inc": {[req.query.account]: parseInt(-1 * eq.query.quantity)}
     }
 
-    let result = await mongo.update(filter, values, "sites");
-    
-    return (result) ? {"status": "ok", "data": req.body.id} : {"status": "error", "errorCode": "404"};
+    console.log(values)
+
+    let result = await mongo.update(filter, values, "Banking");
+
+    return (result) ? {"status": "ok", "data": req.query.id} : {"status": "error", "errorCode": 404};
 };
 
-export const getTagsNames = async (req, ids = []) => {
-    let stages = [
-        {'$match': {'domain.name': req.hostname}},
-        {'$unwind': '$tags'},
-    ];
-
-    (ids.length > 0) ? stages.push({'$match': { 'articles.tags._id': { '$in': ids}}}) : null;
-
-    stages.push({'$project': {'tags': '$tags'}});
-
-    let tagRaw = await mongo.aggregate(stages, undefined, undefined, "sites");
-    let tagArray = [];
-
-    for (const element of tagRaw) {
-        tagArray.push(element.tags);
+export const transferBalance = async (req) => {
+    let filterFrom = {"_id": new ObjectId(req.query.from)};
+    
+    let valuesFrom = {
+        "$inc": {[req.query.account]: parseInt(-1 * eq.query.quantity)}
     }
     
-    return (tagArray.length > 0) ? tagArray : [];
+    let resultFrom = await mongo.update(filterFrom, valuesFrom, "Banking");
+    
+    let filterTo = {"_id": new ObjectId(req.query.to)};
+
+    let valuesTo = {
+        "$inc": {[req.query.account]: parseInt(req.query.quantity)}
+    }
+    
+    let resultTo = await mongo.update(filterTo, valuesTo, "Banking");
+
+    return (resultTo && resultFrom) ? {"status": "ok", "data": req.query.id} : {"status": "error", "errorCode": 404};
 };
