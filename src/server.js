@@ -23,15 +23,15 @@ app.use("/", cors(), index);
 //Error
 // Handle 404
 app.use((req, res) => {
-  	res.send('{status: "error", code: 404}');
+  	res.send({status: "error", code: 404});
 });
 
 // Handle 500
 app.use((error, req, res, next) => {
-  	res.send('{status: "error", code: 500}');
+  	res.send({status: "error", code: 500});
 });
 
-const port = process.env.PORT || 3003;
+const port = process.env.PORT || 3004;
 
 app.listen(port, function listenHandler () {
   	console.info(`Running on ${port}`);
