@@ -7,7 +7,7 @@ let api = {
 	"v1": v1
 }
 
-router.get('/:version(v[0-9]+)/:function', 
+router.post('/:version(v[0-9]+)/:function', 
 	async (req, res) => {
 		let requestedFunction = req.params["function"];
 		let functionVersion = req.params["version"];
