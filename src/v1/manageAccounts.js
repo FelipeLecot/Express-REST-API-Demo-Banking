@@ -2,7 +2,7 @@ import * as mongo from '../mongoOperations.js';
 import { ObjectId } from 'mongodb';
 
 export const createAccount = async (req) => {
-    if (req.body.owner != null) {
+    if (req.body.owner != undefined) {
         return {"status": "error", "errorCode": 400};
     }
 
