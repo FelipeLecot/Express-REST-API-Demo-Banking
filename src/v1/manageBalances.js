@@ -8,7 +8,7 @@ export const getBalances = async (req) => {
 };
 
 export const creditBalance = async (req) => {
-    if (req.body.id != null || req.body.account != null || req.body.quantity != null) {
+    if (req.body.id != undefined || req.body.account != undefined || req.body.quantity != undefined) {
         return {"status": "error", "errorCode": 400};
     }
 
@@ -26,7 +26,7 @@ export const creditBalance = async (req) => {
 };
 
 export const debitBalance = async (req) => {
-    if (req.body.id != null || req.body.account != null || req.body.quantity != null) {
+    if (req.body.id != undefined || req.body.account != undefined || req.body.quantity != undefined) {
         return {"status": "error", "errorCode": 400};
     }
     
@@ -42,7 +42,7 @@ export const debitBalance = async (req) => {
 };
 
 export const transferBalance = async (req) => {
-    if (req.body.from != null || req.body.to != null || req.body.quantity != null || req.body.account != null) {
+    if (req.body.from != undefined || req.body.to != undefined || req.body.quantity != undefined || req.body.account != undefined) {
         return {"status": "error", "errorCode": 400};
     }
         
