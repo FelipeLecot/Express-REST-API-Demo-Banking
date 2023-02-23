@@ -62,5 +62,10 @@ export const transferBalance = async (req) => {
     
     let resultTo = await mongo.update(filterTo, valuesTo, "Banking");
 
+    console.log("results:", resultTo, resultFrom)
+
+    console.log("To", valuesTo, filterTo)
+    console.log("From", valuesFrom, filterFrom)
+
     return (resultTo && resultFrom) ? {"status": "ok"} : {"status": "error", "errorCode": 404};
 };
