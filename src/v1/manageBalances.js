@@ -33,7 +33,7 @@ export const debitBalance = async (req) => {
     let filter = {"_id": new ObjectId(req.body.id)};
 
     let values = {
-        "$inc": {[req.body.account]: parseInt(-1 * req.body.quantity)}
+        "$inc": {[req.body.account]: -1 * parseInt(req.body.quantity)}
     }
 
     let result = await mongo.update(filter, values, "Banking");
@@ -49,7 +49,7 @@ export const transferBalance = async (req) => {
     let filterFrom = {"_id": new ObjectId(req.body.from)};
     
     let valuesFrom = {
-        "$inc": {[req.body.account]: parseInt(-1 * req.query.quantity)}
+        "$inc": {[req.body.account]: -1 * parseInt(req.query.quantity)}
     }
     
     let resultFrom = await mongo.update(filterFrom, valuesFrom, "Banking");
