@@ -1,7 +1,7 @@
 import mongodb from 'mongodb';
 const { MongoClient, ObjectId } = mongodb;
 
-const client = new MongoClient("mongodb+srv://ASOKij389hUBNA928:aPUwJSCQCi60pBBevRGk87n4p3SmHLK8@interview.ypu62do.mongodb.net/?retryWrites=true&w=majority");
+const client = new MongoClient(process.env.MONGO_URL);
 
 export const aggregate = async (stages = [], limit = undefined, sort = undefined, collection) => {
     try {
